@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="extension/icons/icon128.png" alt="Vibe Mini Player Logo" width="96" height="96" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(74, 144, 232, 0.4);" />
+<img src="assets/icon128.png" alt="Vibe Mini Player Logo" width="96" height="96" />
 
 # 🎬 Vibe Mini Player
 ### *Keep your stream visible over your IDE while AI agents write code.*
@@ -29,17 +29,14 @@
 
 ## 🖥️ The Workflow Experience
 
-<div align="center">
+<p align="center">
+  <img src="assets/preview.png" alt="Vibe Mini Player Live Preview — Always on top of IDE" width="100%" />
+</p>
 
-<!-- Visual Graphic Mockup -->
-<img src="assets/preview.svg" alt="Vibe Mini Player Live Preview — Always on top of IDE" width="100%" style="border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);" />
-
-<br/><br/>
-
-👉 **[🎮 Open the Interactive Live Simulator](assets/showcase.html)**  
-*(Test dragging the mini player around the screen directly in your browser!)*
-
-</div>
+<p align="center">
+  👉 <b><a href="assets/showcase.html">🎮 Open Interactive Web Simulator (assets/showcase.html)</a></b><br/>
+  <em>(Drag and test the mini player around the simulated IDE in your browser)</em>
+</p>
 
 <br/>
 
