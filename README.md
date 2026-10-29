@@ -29,14 +29,16 @@
 
 ## 🖥️ The Workflow Experience
 
-<p align="center">
-  <img src="assets/vibe-preview.png" alt="Vibe Mini Player Live Preview — Always on top of IDE" width="100%" />
-</p>
+<div align="center">
 
-<p align="center">
-  👉 <b><a href="assets/showcase.html">🎮 Open Interactive Web Simulator (assets/showcase.html)</a></b><br/>
-  <em>(Drag and test the mini player around the simulated IDE in your browser)</em>
-</p>
+[![Vibe Mini Player Live Preview — Always on top of IDE](https://raw.githubusercontent.com/Shrikanth70/Vibe_Mini_Player/main/assets/vibe-preview.png)](https://htmlpreview.github.io/?https://github.com/Shrikanth70/Vibe_Mini_Player/blob/main/assets/showcase.html)
+
+<br/>
+
+👉 **[🎮 Click Here to Open Interactive Web Simulator](https://htmlpreview.github.io/?https://github.com/Shrikanth70/Vibe_Mini_Player/blob/main/assets/showcase.html)** • **[Source File](assets/showcase.html)**  
+*(Test dragging the mini player around the screen directly in your browser!)*
+
+</div>
 
 <br/>
 

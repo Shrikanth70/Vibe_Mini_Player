@@ -98,7 +98,7 @@ function findMainVideo() {
  * @param {HTMLVideoElement} video
  * @returns {Promise<void>}
  */
-async function openMini(video) {
+async function openMini(video, options = {}) {
   if (!video) {
     updateStatus('no-video');
     return;
@@ -116,7 +116,7 @@ async function openMini(video) {
     document.exitPictureInPicture().catch(() => {});
     return;
   }
-  // If a different video is in PiP, close it without awaiting to avoid losing transient user activation.
+  // If a different video is in PiP, close it synchronously without awaiting to avoid losing transient user activation.
   if (document.pictureInPictureElement) {
     document.exitPictureInPicture().catch(() => {});
   }
@@ -126,12 +126,19 @@ async function openMini(video) {
       promise
         .then(() => updateStatus('open'))
         .catch((err) => {
+          if (err?.name === 'NotAllowedError') {
+            // Transient user activation is required by Chromium when entering PiP.
+            // Ignored gracefully to avoid console noise on background/auto events.
+            return;
+          }
           console.warn('[VibeMiniPlayer] requestPictureInPicture failed:', err?.message || err?.name || err);
           updateStatus('error');
         });
     }
   } catch (err) {
-    // Log complete error details to extension console for clear diagnostics
+    if (err?.name === 'NotAllowedError') {
+      return;
+    }
     console.warn('[VibeMiniPlayer] requestPictureInPicture failed:', err?.message || err?.name || err);
     updateStatus('error');
   }
@@ -164,9 +171,6 @@ function registerMediaSessionControls(video) {
     try { ms.setActionHandler(action, fn); } catch { /* unsupported or blocked */ }
   };
 
-  // Auto-PiP: browser fires this when user switches tabs (Chrome 134+, best-effort)
-  safe('enterpictureinpicture', () => openMini(video));
-
   // Seek controls shown in the PiP window
   safe('seekbackward', () => {
     video.currentTime = Math.max(0, video.currentTime - 10);
@@ -185,7 +189,6 @@ function clearMediaSessionControls() {
   const safe = (action) => {
     try { ms.setActionHandler(action, null); } catch { /* ignore */ }
   };
-  safe('enterpictureinpicture');
   safe('seekbackward');
   safe('seekforward');
 }

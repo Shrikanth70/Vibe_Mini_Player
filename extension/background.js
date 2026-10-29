@@ -97,36 +97,7 @@ function isValidMessage(message, sender) {
   return true;
 }
 
-// ─── Command handler ──────────────────────────────────────────────────────────
-
-chrome.commands.onCommand.addListener(async (command) => {
-  if (command !== 'toggle-mini-player') return;
-
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (!tab?.id) return;
-
-  // Execute directly via scripting API to preserve user activation context
-  try {
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => {
-        if (typeof window.__vibeTogglePip === 'function') {
-          window.__vibeTogglePip();
-          return;
-        }
-        const video = document.querySelector('#movie_player video, video.html5-main-video, video.video-stream') || document.querySelector('video');
-        if (!video) return;
-        if (document.pictureInPictureElement) {
-          document.exitPictureInPicture().catch(() => {});
-        } else {
-          video.requestPictureInPicture().catch(() => {});
-        }
-      },
-    });
-  } catch {
-    // Content script may not be permitted on this tab (e.g. chrome:// internal pages)
-  }
-});
+// Shortcuts are handled via native in-page capture-phase keydown (Alt+L) in content/pip.js
 
 // ─── Message handler ──────────────────────────────────────────────────────────
 
