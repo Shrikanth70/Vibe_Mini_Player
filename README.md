@@ -30,7 +30,7 @@
 ## 🖥️ The Workflow Experience
 
 <p align="center">
-  <img src="assets/preview.png" alt="Vibe Mini Player Live Preview — Always on top of IDE" width="100%" />
+  <img src="assets/vibe-preview.png" alt="Vibe Mini Player Live Preview — Always on top of IDE" width="100%" />
 </p>
 
 <p align="center">
