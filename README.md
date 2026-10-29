@@ -29,6 +29,20 @@
 
 ## 🖥️ The Workflow Experience
 
+<div align="center">
+
+<!-- Visual Graphic Mockup -->
+<img src="assets/preview.svg" alt="Vibe Mini Player Live Preview — Always on top of IDE" width="100%" style="border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);" />
+
+<br/><br/>
+
+👉 **[🎮 Open the Interactive Live Simulator](assets/showcase.html)**  
+*(Test dragging the mini player around the screen directly in your browser!)*
+
+</div>
+
+<br/>
+
 ```text
  ┌────────────────────────────────────────────────────────┐
  │ VS Code / Terminal / IDE Window                        │
@@ -107,7 +121,7 @@
 
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/your-username/vibe-mini-player.git
+   git clone https://github.com/Shrikanth70/Vibe_Mini_Player.git
    ```
 2. Open Google Chrome or Microsoft Edge and navigate to:
    ```text
@@ -175,7 +189,4 @@ Contributions, feature ideas, and pull requests are warmly welcomed!
 Crafted with care for developers who like to code to good vibes. 🎧✨  
 Distributed under the **MIT License**.
 
-S H R I K A N T H
-
 </div>
-
