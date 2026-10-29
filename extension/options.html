@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vibe Mini Player — Options</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #1a1a1a; --surface: #252525; --border: rgba(255,255,255,0.1);
+      --accent: #4a90e8; --text: #e8e8e8; --text-dim: #888; --radius: 8px;
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #f5f5f5; --surface: #fff; --border: rgba(0,0,0,0.12); --accent: #1a73e8; --text: #1a1a1a; --text-dim: #666; }
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; font-size: 14px; background: var(--bg); color: var(--text); max-width: 480px; margin: 40px auto; padding: 24px; line-height: 1.5; }
+    h1 { font-size: 20px; margin-bottom: 4px; }
+    p.subtitle { color: var(--text-dim); margin-bottom: 24px; font-size: 13px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+    label { display: block; margin-bottom: 6px; font-weight: 500; }
+    .hint { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
+    .range-row { display: flex; align-items: center; gap: 12px; }
+    input[type=range] { flex: 1; accent-color: var(--accent); }
+    .range-value { min-width: 48px; text-align: right; font-size: 13px; }
+    .btn { padding: 9px 20px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    #savedMsg { display: none; color: #4caf50; font-size: 13px; margin-left: 12px; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <h1>Vibe Mini Player</h1>
+  <p class="subtitle">Extension options</p>
+
+  <div class="card">
+    <label for="pipWidth">Preferred PiP width</label>
+    <p class="hint">The browser will use this as a hint. Actual size depends on screen and aspect ratio.</p>
+    <div class="range-row">
+      <input type="range" id="pipWidth" min="240" max="960" step="40" value="480" aria-valuenow="480" aria-valuemin="240" aria-valuemax="960" />
+      <span class="range-value" id="pipWidthVal" aria-live="polite">480px</span>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center">
+    <button class="btn" id="btnSave" type="button">Save settings</button>
+    <span id="savedMsg" aria-live="polite">Saved!</span>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
+

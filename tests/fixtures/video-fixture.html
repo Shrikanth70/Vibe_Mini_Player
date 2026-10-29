@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vibe Mini Player — Test Fixture</title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: #eee; padding: 24px; }
+    h1 { margin-bottom: 12px; }
+    video { width: 640px; max-width: 100%; border-radius: 8px; background: #222; display: block; margin-bottom: 16px; }
+    button { padding: 8px 16px; margin-right: 8px; background: #4a90e8; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    #log { margin-top: 16px; font-size: 13px; color: #aaa; font-family: monospace; white-space: pre; }
+  </style>
+</head>
+<body>
+  <h1>Video fixture — Vibe Mini Player test page</h1>
+  <p style="margin-bottom:12px;color:#aaa">This page hosts a local video for automated and manual PiP testing.</p>
+
+  <!-- Main test video -->
+  <video id="mainVideo" controls loop preload="auto" aria-label="Test video">
+    <source src="test-video.mp4" type="video/mp4" />
+    <!-- Fallback: canvas-generated video for automated tests -->
+    Your browser does not support the video element.
+  </video>
+
+  <!-- Small muted autoplay video — should be EXCLUDED by the selector -->
+  <video id="tinyMuted" autoplay muted loop
+         style="width:80px;height:45px;opacity:0.1"
+         aria-label="Tiny muted video (should be ignored)">
+    <source src="test-video.mp4" type="video/mp4" />
+  </video>
+
+  <div>
+    <button id="btnPlay" type="button">Play</button>
+    <button id="btnPause" type="button">Pause</button>
+    <button id="btnPip" type="button">Open PiP (via JS)</button>
+    <button id="btnSimNavSpa" type="button">Simulate SPA navigation</button>
+  </div>
+
+  <div id="log">Events will appear here...</div>
+
+  <script>
+    'use strict';
+    const video = document.getElementById('mainVideo');
+    const log = document.getElementById('log');
+
+    function logEvent(msg) {
+      const ts = new Date().toISOString().substring(11, 23);
+      log.textContent = '[' + ts + '] ' + msg + '\n' + log.textContent;
+    }
+
+    // Generate a tiny canvas-based video source so the fixture works without a real mp4
+    function injectCanvasSource() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 640; canvas.height = 360;
+      const ctx = canvas.getContext('2d');
+      let hue = 0;
+      function draw() {
+        ctx.fillStyle = 'hsl(' + (hue++ % 360) + ',70%,40%)';
+        ctx.fillRect(0, 0, 640, 360);
+        ctx.fillStyle = '#fff';
+        ctx.font = '36px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Vibe Mini Player Test', 320, 180);
+        requestAnimationFrame(draw);
+      }
+      draw();
+      if (canvas.captureStream) {
+        const stream = canvas.captureStream(30);
+        video.srcObject = stream;
+        // Also apply to tiny video
+        const tinyVideo = document.getElementById('tinyMuted');
+        if (tinyVideo) tinyVideo.srcObject = stream;
+        logEvent('Canvas stream injected as video source');
+      }
+    }
+
+    // Try canvas source if no src loads
+    video.addEventListener('error', injectCanvasSource, { once: true });
+    // Also inject immediately if supported (avoids waiting for error)
+    if (typeof HTMLCanvasElement !== 'undefined' && HTMLCanvasElement.prototype.captureStream) {
+      injectCanvasSource();
+    }
+
+    video.addEventListener('enterpictureinpicture', () => logEvent('Video entered PiP'));
+    video.addEventListener('leavepictureinpicture', () => logEvent('Video left PiP'));
+    video.addEventListener('play',  () => logEvent('play'));
+    video.addEventListener('pause', () => logEvent('pause'));
+
+    document.getElementById('btnPlay').addEventListener('click', () => video.play());
+    document.getElementById('btnPause').addEventListener('click', () => video.pause());
+
+    document.getElementById('btnPip').addEventListener('click', async () => {
+      try {
+        if (document.pictureInPictureElement) {
+          await document.exitPictureInPicture();
+          logEvent('Exited PiP');
+        } else {
+          await video.requestPictureInPicture();
+          logEvent('Entered PiP');
+        }
+      } catch (e) {
+        logEvent('PiP error: ' + e.message);
+      }
+    });
+
+    // Simulate YouTube-like SPA navigation (dispatches yt-navigate-finish)
+    document.getElementById('btnSimNavSpa').addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('yt-navigate-finish'));
+      logEvent('Dispatched yt-navigate-finish (SPA navigation simulation)');
+    });
+
+    // Expose for Playwright
+    window.__vibePipTest = {
+      getVideoState: () => ({
+        paused: video.paused,
+        ended: video.ended,
+        inPip: document.pictureInPictureElement === video,
+        readyState: video.readyState,
+      }),
+    };
+  </script>
+</body>
+</html>
+

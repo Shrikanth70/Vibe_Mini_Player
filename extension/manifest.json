@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Vibe Mini Player",
+  "version": "0.1.0",
+  "version_name": "0.1.0 (beta)",
+  "description": "Keeps your YouTube video visible as an always-on-top mini window while you work in any other app.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Vibe Mini Player",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content/pip.js"],
+      "css": ["content/ui.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["https://www.youtube.com/*"],
+  "optional_host_permissions": ["https://*/*"],
+  "commands": {
+    "toggle-mini-player": {
+      "suggested_key": {
+        "default": "Alt+L",
+        "mac": "Alt+L"
+      },
+      "description": "Toggle mini player (Picture-in-Picture)"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "web_accessible_resources": []
+}
+

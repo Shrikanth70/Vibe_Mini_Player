@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibe Mini Player</title>
+  <style>
+    /* ── Reset & base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1a1a;
+      --surface: #252525;
+      --border: rgba(255,255,255,0.12);
+      --accent: #4a90e8;
+      --accent-hover: #5da0f8;
+      --text: #f0f0f0;
+      --text-dim: #a0a0a0;
+      --success: #4caf50;
+      --warning: #ffb74d;
+      --error: #ef5350;
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f9f9fb;
+        --surface: #ffffff;
+        --border: rgba(0,0,0,0.14);
+        --accent: #1a73e8;
+        --accent-hover: #1558b0;
+        --text: #1a1a1a;
+        --text-dim: #555555;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text);
+      width: 280px;
+      min-height: 180px;
+      padding: 16px;
+      line-height: 1.4;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .header svg {
+      width: 20px; height: 20px;
+      fill: var(--accent);
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ── Status line ─────────────────────────────────────────────── */
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      min-height: 32px;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .status-dot.open { background: var(--success); }
+    .status-dot.error { background: var(--error); }
+    .status-dot.warning { background: var(--warning); }
+
+    #statusText {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ── Primary action ──────────────────────────────────────────── */
+    .btn-primary {
+      width: 100%;
+      padding: 9px 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s, transform 0.1s;
+      margin-bottom: 12px;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary svg {
+      width: 16px; height: 16px;
+      fill: none; stroke: #fff; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* ── Toggles ─────────────────────────────────────────────────── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-of-type { border-bottom: none; }
+    .toggle-label {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .toggle-label span:first-child { font-size: 13px; color: var(--text); }
+    .toggle-label span:last-child  { font-size: 11px; color: var(--text-dim); }
+
+    /* Switch */
+    .switch {
+      position: relative;
+      width: 36px; height: 20px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0; width: 0; height: 0;
+      position: absolute;
+    }
+    .switch-track {
+      position: absolute;
+      inset: 0;
+      background: #555;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .switch input:checked + .switch-track { background: var(--accent); }
+    .switch input:focus-visible + .switch-track {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .switch-track::after {
+      content: '';
+      position: absolute;
+      left: 2px; top: 2px;
+      width: 16px; height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .switch input:checked + .switch-track::after { transform: translateX(16px); }
+
+    /* ── Per-site section ────────────────────────────────────────── */
+    .site-section {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .site-section p {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .btn-secondary {
+      width: 100%;
+      padding: 7px 12px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-secondary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Shortcut hint ───────────────────────────────────────────── */
+    .shortcut-hint {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: center;
+    }
+    kbd {
+      font-family: inherit;
+      font-size: 10px;
+      padding: 1px 5px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header" role="banner">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="2" y="3" width="20" height="14" rx="2"/>
+      <rect x="13" y="11" width="8" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="0"/>
+    </svg>
+    <h1>Vibe Mini Player</h1>
+  </div>
+
+  <!-- Status -->
+  <div class="status-line" role="status" aria-live="polite">
+    <div class="status-dot" id="statusDot" aria-hidden="true"></div>
+    <span id="statusText">Checking…</span>
+  </div>
+
+  <!-- Primary action -->
+  <button class="btn-primary" id="btnOpenPip" type="button">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="2" y="3" width="20" height="14" rx="2"/>
+      <rect x="13" y="11" width="8" height="5" rx="1"/>
+    </svg>
+    <span id="btnLabel">Open mini player</span>
+  </button>
+
+  <!-- Toggles -->
+  <div role="group" aria-label="Settings">
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span>Extension enabled</span>
+        <span>Turns off all features on this tab</span>
+      </div>
+      <label class="switch" aria-label="Extension enabled">
+        <input type="checkbox" id="toggleEnabled" checked />
+        <div class="switch-track"></div>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span>Open automatically</span>
+        <span>PiP opens when you leave the tab</span>
+      </div>
+      <label class="switch" aria-label="Open automatically when leaving the tab">
+        <input type="checkbox" id="toggleAutoPip" />
+        <div class="switch-track"></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Per-site section -->
+  <div class="site-section" id="siteSection">
+    <p id="siteDesc">This site is not enabled yet. Click below to allow the mini player here.</p>
+    <button class="btn-secondary" id="btnEnableSite" type="button">Enable on this site</button>
+  </div>
+
+  <!-- Shortcut hint -->
+  <p class="shortcut-hint">
+    Keyboard shortcut: <kbd>Alt+L</kbd>
+    (<a href="chrome://extensions/shortcuts" id="shortcutLink" style="color: var(--accent); text-decoration: none;">configure</a>)
+  </p>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+

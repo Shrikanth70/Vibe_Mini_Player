@@ -1,0 +1,23 @@
+/*
+ * content/ui.css — Vibe Mini Player
+ *
+ * Styles for the in-page button host element.
+ * The button itself is rendered in a closed Shadow DOM (see pip.js),
+ * so this file only positions the host element in the page.
+ *
+ * Note: Shadow DOM styles are built inline in pip.js via DOM API
+ * to avoid any page CSP interference.
+ */
+
+#vibe-pip-host {
+  /* The host is positioned fixed in pip.js via inline Shadow DOM styles.
+     This rule is a no-op safety net in case the browser applies
+     page CSS to the host element despite shadow encapsulation. */
+  all: initial;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+}
+

@@ -1,0 +1,52 @@
+# Project documentation & process tracking
+docs/
+PROGRESS.md
+SKILL.md
+skills/
+
+# Dependencies
+node_modules/
+
+# Environment, secrets & credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.pfx
+*.token
+*credential*
+*secret*
+
+# Test artifacts & temporary profiles
+test-results/
+playwright-report/
+.tmp-playwright-user-data/
+coverage/
+.cache/
+
+# Logs & debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Release builds & packages
+release/
+*.zip
+*.crx
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor folders
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
