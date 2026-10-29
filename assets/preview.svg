@@ -9,7 +9,7 @@
 
     <!-- PiP Window Gradients -->
     <linearGradient id="pipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-cohttps://github.com/Shrikanth70/Vibe_Mini_Playerlor="#1e2638" />
+      <stop offset="0%" stop-color="#1e2638" />
       <stop offset="100%" stop-color="#111622" />
     </linearGradient>
 
